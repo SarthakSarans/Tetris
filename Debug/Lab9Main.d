@@ -43,7 +43,8 @@ Lab9Main.o: ../Lab9Main.c \
  C:/Users/sarth/OneDrive/Documents/School/ECE319K/MSPM0_ValvanoWare/ECE319K_Lab9/LED.h \
  C:/Users/sarth/OneDrive/Documents/School/ECE319K/MSPM0_ValvanoWare/ECE319K_Lab9/Switch.h \
  C:/Users/sarth/OneDrive/Documents/School/ECE319K/MSPM0_ValvanoWare/ECE319K_Lab9/Sound.h \
- C:/Users/sarth/OneDrive/Documents/School/ECE319K/MSPM0_ValvanoWare/ECE319K_Lab9/images/images.h
+ C:/Users/sarth/OneDrive/Documents/School/ECE319K/MSPM0_ValvanoWare/ECE319K_Lab9/images/images.h \
+ C:/Users/sarth/OneDrive/Documents/School/ECE319K/MSPM0_ValvanoWare/ECE319K_Lab9/Sprite.h
 
 C:/ti/mspm0_sdk_2_01_00_03/source/ti/devices/msp/msp.h:
 
@@ -130,3 +131,5 @@ C:/Users/sarth/OneDrive/Documents/School/ECE319K/MSPM0_ValvanoWare/ECE319K_Lab9/
 C:/Users/sarth/OneDrive/Documents/School/ECE319K/MSPM0_ValvanoWare/ECE319K_Lab9/Sound.h:
 
 C:/Users/sarth/OneDrive/Documents/School/ECE319K/MSPM0_ValvanoWare/ECE319K_Lab9/images/images.h:
+
+C:/Users/sarth/OneDrive/Documents/School/ECE319K/MSPM0_ValvanoWare/ECE319K_Lab9/Sprite.h:

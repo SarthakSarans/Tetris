@@ -9,6 +9,7 @@
 "./ST7735.o"
 "./SmallFont.o"
 "./Sound.o"
+"./Sprite.o"
 "./Switch.o"
 "./TExaS.o"
 "./Timer.o"

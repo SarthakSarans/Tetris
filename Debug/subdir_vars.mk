@@ -20,6 +20,7 @@ C:/Users/sarth/OneDrive/Documents/School/ECE319K/MSPM0_ValvanoWare/inc/SPI.c \
 C:/Users/sarth/OneDrive/Documents/School/ECE319K/MSPM0_ValvanoWare/inc/ST7735.c \
 ../SmallFont.c \
 ../Sound.c \
+../Sprite.c \
 ../Switch.c \
 C:/Users/sarth/OneDrive/Documents/School/ECE319K/MSPM0_ValvanoWare/inc/TExaS.c \
 C:/Users/sarth/OneDrive/Documents/School/ECE319K/MSPM0_ValvanoWare/inc/Timer.c 
@@ -36,6 +37,7 @@ C_DEPS += \
 ./ST7735.d \
 ./SmallFont.d \
 ./Sound.d \
+./Sprite.d \
 ./Switch.d \
 ./TExaS.d \
 ./Timer.d 
@@ -52,6 +54,7 @@ OBJS += \
 ./ST7735.o \
 ./SmallFont.o \
 ./Sound.o \
+./Sprite.o \
 ./Switch.o \
 ./TExaS.o \
 ./Timer.o 
@@ -68,6 +71,7 @@ OBJS__QUOTED += \
 "ST7735.o" \
 "SmallFont.o" \
 "Sound.o" \
+"Sprite.o" \
 "Switch.o" \
 "TExaS.o" \
 "Timer.o" 
@@ -84,6 +88,7 @@ C_DEPS__QUOTED += \
 "ST7735.d" \
 "SmallFont.d" \
 "Sound.d" \
+"Sprite.d" \
 "Switch.d" \
 "TExaS.d" \
 "Timer.d" 
@@ -100,6 +105,7 @@ C_SRCS__QUOTED += \
 "C:/Users/sarth/OneDrive/Documents/School/ECE319K/MSPM0_ValvanoWare/inc/ST7735.c" \
 "../SmallFont.c" \
 "../Sound.c" \
+"../Sprite.c" \
 "../Switch.c" \
 "C:/Users/sarth/OneDrive/Documents/School/ECE319K/MSPM0_ValvanoWare/inc/TExaS.c" \
 "C:/Users/sarth/OneDrive/Documents/School/ECE319K/MSPM0_ValvanoWare/inc/Timer.c" 

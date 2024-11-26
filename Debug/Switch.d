@@ -31,7 +31,8 @@ Switch.o: ../Switch.c \
  C:/ti/mspm0_sdk_2_01_00_03/source/ti/devices/msp/peripherals/m0p/hw_debugss.h \
  C:/ti/mspm0_sdk_2_01_00_03/source/ti/devices/msp/peripherals/m0p/hw_sysctl.h \
  C:/ti/mspm0_sdk_2_01_00_03/source/ti/devices/msp/peripherals/m0p/sysctl/hw_sysctl_mspm0g1x0x_g3x0x.h \
- C:/Users/sarth/OneDrive/Documents/School/ECE319K/MSPM0_ValvanoWare/inc/LaunchPad.h
+ C:/Users/sarth/OneDrive/Documents/School/ECE319K/MSPM0_ValvanoWare/inc/LaunchPad.h \
+ C:/Users/sarth/OneDrive/Documents/School/ECE319K/MSPM0_ValvanoWare/ECE319K_Lab9/Switch.h
 
 C:/ti/mspm0_sdk_2_01_00_03/source/ti/devices/msp/msp.h:
 
@@ -94,3 +95,5 @@ C:/ti/mspm0_sdk_2_01_00_03/source/ti/devices/msp/peripherals/m0p/hw_sysctl.h:
 C:/ti/mspm0_sdk_2_01_00_03/source/ti/devices/msp/peripherals/m0p/sysctl/hw_sysctl_mspm0g1x0x_g3x0x.h:
 
 C:/Users/sarth/OneDrive/Documents/School/ECE319K/MSPM0_ValvanoWare/inc/LaunchPad.h:
+
+C:/Users/sarth/OneDrive/Documents/School/ECE319K/MSPM0_ValvanoWare/ECE319K_Lab9/Switch.h:
