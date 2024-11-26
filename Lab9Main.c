@@ -64,6 +64,8 @@ uint32_t Random(uint32_t n)
 }
 
 // games  engine runs at 30Hz
+
+uint32_t Data, Position, Flag; // Global Variables
 void TIMG12_IRQHandler(void)
 {
   uint32_t pos, msg;
@@ -73,10 +75,14 @@ void TIMG12_IRQHandler(void)
     GPIOB->DOUTTGL31_0 = GREEN; // toggle PB27 (minimally intrusive debugging)
                                 // game engine goes here
     // 1) sample slide pot
+    Data = ADCin();
+    Position = Convert(Data); // returns 0 - 2000
     // 2) read input switches
     // 3) move sprites
+
     // 4) start sounds
     // 5) set semaphore
+    Flag = 1;
     // NO LCD OUTPUT IN INTERRUPT SERVICE ROUTINES
     GPIOB->DOUTTGL31_0 = GREEN; // toggle PB27 (minimally intrusive debugging)
   }
@@ -165,22 +171,29 @@ int main(void)
   PLL_Init(); // set bus speed
   LaunchPad_Init();
   ST7735_InitPrintf();
+  ADCinit();
+  TimerG12_IntArm(2666664, 0);
+  TIMG12_IRQHandler();
+  __enable_irq();
+  Flag = 1;
   // note: if you colors are weird, see different options for
   //  ST7735_InitR(INITR_REDTAB); inside ST7735_InitPrintf()
   ST7735_FillScreen(ST7735_BLACK);
   sprite_t rect;
   Rectangle(&rect, 1, rectangleImage1, rectangleImage2);
- // ST7735_DrawBitmap(10, 24, l, 24, 36); // player ship bottom
-  //ST7735_DrawBitmap(50, 79, j, 24, 36);
-  ST7735_DrawBitmap(23, 48, squareImage, 24, 24);    // player ship bottom
+  // ST7735_DrawBitmap(10, 24, l, 24, 36); // player ship bottom
+  // ST7735_DrawBitmap(50, 79, j, 24, 36);
+  /// ST7735_DrawBitmap(23, 48, squareImage, 24, 24); // player ship bottom
 
-  ST7735_DrawBitmap(62, 48, rect.image[0], rect.w[0], rect.h[0]); // player ship bottom
+  // ST7735_DrawBitmap(62, 48, rect.image[0], rect.w[0], rect.h[0]); // player ship bottom
 
-  //  for (uint32_t t = 500; t > 0; t = t - 5)
-  //  {
-  //    SmallFont_OutVertical(t, 104, 6); // top left
-  //    Clock_Delay1ms(50);               // delay 50 msec
-  //  }
+  // for (uint32_t t = 500; t > 0; t = t - 5)
+  // {
+  //       int x=0;
+  //        ST7735_DrawBitmap(x, 140, squareImage, 24, 24);
+  //        Clock_Delay1ms(10);
+  //        x=x+5%128;            // delay 50 msec
+  // }
   //  ST7735_FillScreen(0x0000); // set screen to black
   //  ST7735_SetCursor(1, 1);
   //  ST7735_OutString("GAME OVER");
@@ -190,8 +203,18 @@ int main(void)
   //  ST7735_OutString("Earthling!");
   //  ST7735_SetCursor(2, 4);
   //  ST7735_OutUDec(1234);
+  int y = 0;
   while (1)
   {
+    if (Flag)
+    {
+      Flag = 0;
+      int posi=Position;
+      ST7735_DrawBitmap(BlockMove(posi), y+52, squareImage, 24, 24);
+      Clock_Delay1ms(500);
+      ST7735_DrawBitmap(BlockMove(posi), y+52, squareBlack, 24, 24);
+      y=(y+12)%120;
+    }
   }
 }
 
