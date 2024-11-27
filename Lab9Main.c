@@ -79,12 +79,11 @@ void TIMG12_IRQHandler(void)
     // returns 0 - 2000
     // 2) read input switches
     Switch = Switch_In();
-    
-    
+
     // 3) move sprites
     Position = Convert(Data);
     int pos = BlockMove(Position);
-    piece.x = pos;
+    piece.x = validX(piece, pos);
     // 4) start sounds
     // 5) set semaphore
     Flag = 1;
@@ -259,7 +258,7 @@ int main(void)
     {
       rotate(&piece);
     }
-    int xPos = validX(piece);
+    int xPos = piece.x;
     ST7735_DrawBitmap(xPos, piece.y + 52, piece.image[piece.orientation], piece.w[piece.orientation], piece.h[piece.orientation]);
     Clock_Delay1ms(500);
     if (piece.y + 52 != 160)

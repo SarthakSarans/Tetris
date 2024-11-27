@@ -98,23 +98,24 @@ int drop(sprite_t *sprite)
     return 1;
 }
 
-int validX(sprite_t* sprite)
+int validX(sprite_t sprite, int x)
 {
     if (sprite.shape == sq)
     {
-        if (sprite.x > 96)
+        if (x > 96)
         {
             return 100;
         }
+        return x ;
     }
     if (sprite.shape == rect)
     {
         if (sprite.orientation % 2)
         {
-            if (sprite.x > 72)
+            if (x > 72)
                 return 76;
         }
-        return sprite.x;
+        return x;
     }
     return 4;
 }
