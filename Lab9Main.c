@@ -31,7 +31,7 @@ void PLL_Init(void)
   // Clock_Init40MHz(); // run this line for 40MHz
   Clock_Init80MHz(0); // run this line for 80MHz
 }
-
+int blocks[10][10] = {0};
 Arabic_t ArabicAlphabet[] = {
     alif, ayh, baa, daad, daal, dhaa, dhaal, faa, ghayh, haa, ha, jeem, kaaf, khaa, laam, meem, noon, qaaf, raa, saad, seen, sheen, ta, thaa, twe, waaw, yaa, zaa, space, dot, null};
 Arabic_t Hello[] = {alif, baa, ha, raa, meem, null};                                   // hello
@@ -64,8 +64,8 @@ uint32_t Random(uint32_t n)
 }
 
 // games  engine runs at 30Hz
-
-uint32_t Data, Position, Flag; // Global Variables
+sprite_t piece;
+uint32_t Data, Position, Flag, Switch; // Global Variables
 void TIMG12_IRQHandler(void)
 {
   uint32_t pos, msg;
@@ -76,10 +76,15 @@ void TIMG12_IRQHandler(void)
                                 // game engine goes here
     // 1) sample slide pot
     Data = ADCin();
-    Position = Convert(Data); // returns 0 - 2000
+    // returns 0 - 2000
     // 2) read input switches
+    Switch = Switch_In();
+    
+    
     // 3) move sprites
-
+    Position = Convert(Data);
+    int pos = BlockMove(Position);
+    piece.x = pos;
     // 4) start sounds
     // 5) set semaphore
     Flag = 1;
@@ -90,6 +95,20 @@ void TIMG12_IRQHandler(void)
 uint8_t TExaS_LaunchPadLogicPB27PB26(void)
 {
   return (0x80 | ((GPIOB->DOUT31_0 >> 26) & 0x03));
+}
+
+void drawShape(sprite_t sprite)
+{
+  for (int i = 0; i < 10; i++)
+  {
+    for (int j = 0; j < 10; j++)
+    {
+      if (blocks[i][j])
+      {
+        ST7735_DrawBitmap(i * 12 + 4, j * 12 + 52, singleBlock, 12, 12);
+      }
+    }
+  }
 }
 
 typedef enum
@@ -165,7 +184,7 @@ int main1(void)
 }
 
 // use main2 to observe graphics
-int main(void)
+int main2(void)
 { // main2
   __disable_irq();
   PLL_Init(); // set bus speed
@@ -180,7 +199,7 @@ int main(void)
   //  ST7735_InitR(INITR_REDTAB); inside ST7735_InitPrintf()
   ST7735_FillScreen(ST7735_BLACK);
   sprite_t rect;
-  Rectangle(&rect, 1, rectangleImage1, rectangleImage2);
+  Rectangle(&rect, 1, rectangleImage1, rectangleImage2, rectangleBlack1, rectangleBlack2);
   // ST7735_DrawBitmap(10, 24, l, 24, 36); // player ship bottom
   // ST7735_DrawBitmap(50, 79, j, 24, 36);
   /// ST7735_DrawBitmap(23, 48, squareImage, 24, 24); // player ship bottom
@@ -209,25 +228,58 @@ int main(void)
     if (Flag)
     {
       Flag = 0;
-      int posi=Position;
-      ST7735_DrawBitmap(BlockMove(posi), y+52, squareImage, 24, 24);
+      int posi = Position;
+      ST7735_DrawBitmap(BlockMove(posi), y + 52, squareImage, 24, 24);
       Clock_Delay1ms(500);
-      ST7735_DrawBitmap(BlockMove(posi), y+52, squareBlack, 24, 24);
-      y=(y+12)%120;
+      ST7735_DrawBitmap(BlockMove(posi), y + 52, squareBlack, 24, 24);
+      y = (y + 12) % 120;
     }
   }
 }
 
 // use main3 to test switches and LEDs
-int main3(void)
+int main(void)
 { // main3
   __disable_irq();
   PLL_Init(); // set bus speed
   LaunchPad_Init();
+  ST7735_InitPrintf();
   Switch_Init(); // initialize switches
   LED_Init();    // initialize LED
+  ADCinit();
+  TimerG12_IntArm(2666664, 0);
+  TIMG12_IRQHandler();
+  __enable_irq();
+  ST7735_FillScreen(ST7735_BLACK);
+  Rectangle(&piece, 1, rectangleImage1, rectangleImage2, rectangleBlack1, rectangleBlack2);
+  int count = 0;
   while (1)
   {
+    if (Switch)
+    {
+      rotate(&piece);
+    }
+    int xPos = validX(piece);
+    ST7735_DrawBitmap(xPos, piece.y + 52, piece.image[piece.orientation], piece.w[piece.orientation], piece.h[piece.orientation]);
+    Clock_Delay1ms(500);
+    if (piece.y + 52 != 160)
+    {
+      ST7735_DrawBitmap(xPos, piece.y + 52, piece.black[piece.orientation], piece.w[piece.orientation], piece.h[piece.orientation]);
+    }
+    else
+    {
+      placeBlock(piece);
+    }
+    if (drop(&piece))
+    {
+
+      drawShape(piece);
+      if (count % 2)
+        Square(&piece, 1, squareImage, squareBlack);
+      else
+        Rectangle(&piece, 1, rectangleImage1, rectangleImage2, rectangleBlack1, rectangleBlack2);
+      count++;
+    }
     // write code to test switches and LEDs
   }
 }
@@ -282,8 +334,8 @@ int main5(void)
   LED_Init();                                      // initialize LED
   Sound_Init();                                    // initialize sound
   TExaS_Init(0, 0, &TExaS_LaunchPadLogicPB27PB26); // PB27 and PB26
-                                                   // initialize interrupts on TimerG12 at 30 Hz
-
+  TimerG12_IntArm(2666664, 0);                     // initialize interrupts on TimerG12 at 30 Hz
+  TIMG12_IRQHandler();
   // initialize all data structures
   __enable_irq();
 
