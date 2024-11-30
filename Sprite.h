@@ -36,6 +36,8 @@ extern int blocks[10][10];
 extern void rotate(sprite_t *sprite);
 extern int drop(sprite_t *sprite);
 extern int validX(sprite_t sprite, int x);
+extern int processGrid();
+extern int clearBlocks(int xPos);
 extern void placeBlock(sprite_t sprite);
 extern void Square(sprite_t *sprite, uint32_t speed, const unsigned short *squareImage, const unsigned short *squareBlack);
 extern void Rectangle(sprite_t *sprite, uint32_t speed, const unsigned short *rectangleImage1, const unsigned short *rectangleImage2, const unsigned short *rectangleBlack1, const unsigned short *rectangleBlack2);

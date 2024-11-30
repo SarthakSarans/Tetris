@@ -58,10 +58,12 @@ void placeBlock(sprite_t sprite)
 {
     if (sprite.shape == sq)
     {
+        if(clearBlocks(sprite.y / 12)){return;}
         blocks[sprite.x / 12][sprite.y / 12] = 1;
         blocks[sprite.x / 12 + 1][sprite.y / 12] = 1;
         blocks[sprite.x / 12][sprite.y / 12 - 1] = 1;
         blocks[sprite.x / 12 + 1][sprite.y / 12 - 1] = 1;
+        
     }
     if (sprite.shape == rect)
     {
@@ -74,23 +76,65 @@ void placeBlock(sprite_t sprite)
         }
         else
         {
+            if(clearBlocks(sprite.y / 12)){return;}
             blocks[sprite.x / 12][sprite.y / 12] = 1;
             blocks[sprite.x / 12][sprite.y / 12 - 1] = 1;
             blocks[sprite.x / 12][sprite.y / 12 - 2] = 1;
             blocks[sprite.x / 12][sprite.y / 12 - 3] = 1;
+           
         }
     }
+}
+int clearBlocks(int yPos)
+{
+    if (yPos != 0)
+    {
+        return 0;
+    }
+    for (int i = 0; i < 10; i++)
+    {
+        for (int j = 0; j < 10; j++)
+        {
+            blocks[i][j] = 0;
+        }
+    }
+    return 1;
 }
 
 void rotate(sprite_t *sprite)
 {
     sprite->orientation = (sprite->orientation + 1) % 4;
 }
-int drop(sprite_t *sprite)
+int drop(sprite_t *sprite) // return 1 if not valid position, retun 0 if valid drop
 {
     int dropping = (sprite->y + 12) % 120;
+    if (sprite->shape == sq)
+    {
+        if (blocks[sprite->x / 12][dropping / 12] || blocks[sprite->x / 12 + 1][dropping / 12])
+        {
+            return 2;
+        }
+    }
+    else if (sprite->shape == rect)
+    {
+        if (sprite->orientation % 2)
+        {
+            if (blocks[sprite->x / 12][dropping / 12] || blocks[sprite->x / 12 + 1][dropping / 12] || blocks[sprite->x / 12 + 2][dropping / 12] || blocks[sprite->x / 12 + 3][dropping / 12])
+            {
+                return 2;
+            }
+        }
+        else
+        {
+            if (blocks[sprite->x / 12][dropping / 12])
+            {
+                return 2;
+            }
+        }
+    }
+
     sprite->y = dropping;
-    if (dropping != 0)
+    if (dropping)
     {
         return 0;
     }
@@ -106,7 +150,7 @@ int validX(sprite_t sprite, int x)
         {
             return 100;
         }
-        return x ;
+        return x;
     }
     if (sprite.shape == rect)
     {
@@ -118,4 +162,42 @@ int validX(sprite_t sprite, int x)
         return x;
     }
     return 4;
+}
+
+int processGrid()
+{
+    int changed = 0;
+    for (int row = 0; row < 10; row++)
+    {
+        int isFull = 1; // Assume the row is full
+        for (int col = 0; col < 10; col++)
+        {
+            if (blocks[col][row] == 0)
+            {
+                isFull = 0; // Row is not full
+                break;
+            }
+        }
+        if (isFull)
+        {
+            changed = 1;
+            // Shift rows above the full row down
+            for (int r = row; r > 0; r--)
+            {
+                for (int col = 0; col < 10; col++)
+                {
+                    blocks[col][r] = blocks[col][r - 1];
+                }
+            }
+
+            // Clear the top row
+            for (int col = 0; col < 10; col++)
+            {
+                blocks[col][0] = 0;
+            }
+            // Recheck the same row after shifting
+            row--;
+        }
+    }
+    return changed;
 }

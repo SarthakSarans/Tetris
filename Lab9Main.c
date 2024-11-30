@@ -105,6 +105,8 @@ void drawShape(sprite_t sprite)
       if (blocks[i][j])
       {
         ST7735_DrawBitmap(i * 12 + 4, j * 12 + 52, singleBlock, 12, 12);
+      }else{
+        ST7735_DrawBitmap(i * 12 + 4, j * 12 + 52, singleBlack, 12, 12);
       }
     }
   }
@@ -259,20 +261,29 @@ int main(void)
       rotate(&piece);
     }
     int xPos = piece.x;
-    ST7735_DrawBitmap(xPos, piece.y + 52, piece.image[piece.orientation], piece.w[piece.orientation], piece.h[piece.orientation]);
+    ST7735_DrawBitmap(xPos, piece.y + 40, piece.image[piece.orientation], piece.w[piece.orientation], piece.h[piece.orientation]);
     Clock_Delay1ms(500);
-    if (piece.y + 52 != 160)
+    if (!blocks[xPos][piece.y / 12])
     {
-      ST7735_DrawBitmap(xPos, piece.y + 52, piece.black[piece.orientation], piece.w[piece.orientation], piece.h[piece.orientation]);
+      ST7735_DrawBitmap(xPos, piece.y + 40, piece.black[piece.orientation], piece.w[piece.orientation], piece.h[piece.orientation]);
     }
-    else
+    if (piece.y / 12 == 9)
     {
       placeBlock(piece);
     }
-    if (drop(&piece))
+    int dropped = drop(&piece);
+    if (dropped) // check if being placed down
     {
-
+      if (dropped == 2)
+      {
+        placeBlock(piece);
+      }
       drawShape(piece);
+      if (processGrid())
+      { // if full row then shift everyting down
+        Clock_Delay1ms(50);
+        drawShape(piece);
+      }
       if (count % 2)
         Square(&piece, 1, squareImage, squareBlack);
       else
