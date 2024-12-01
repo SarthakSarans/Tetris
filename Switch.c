@@ -16,5 +16,5 @@ void Switch_Init(void)
 // return current state of switches
 uint32_t Switch_In(void)
 {
-    return GPIOB->DIN31_0 & 0x30000; // replace this your code
+    return (GPIOB->DIN31_0 & 0x30000) >> 16; // replace this your code
 }

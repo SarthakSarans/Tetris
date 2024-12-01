@@ -1,7 +1,7 @@
 // Lab9Main.c
 // Runs on MSPM0G3507
 // Lab 9 ECE319K
-// Your name
+// Sarthak Sarans
 // Last Modified: 8/21/2024
 
 #include <stdio.h>
@@ -62,10 +62,11 @@ uint32_t Random(uint32_t n)
 {
   return (Random32() >> 16) % n;
 }
-
+int swap();
 // games  engine runs at 30Hz
 sprite_t piece;
 uint32_t Data, Position, Flag, Switch; // Global Variables
+uint32_t stored = 4;
 void TIMG12_IRQHandler(void)
 {
   uint32_t pos, msg;
@@ -105,11 +106,47 @@ void drawShape(sprite_t sprite)
       if (blocks[i][j])
       {
         ST7735_DrawBitmap(i * 12 + 4, j * 12 + 52, singleBlock, 12, 12);
-      }else{
+      }
+      else
+      {
         ST7735_DrawBitmap(i * 12 + 4, j * 12 + 52, singleBlack, 12, 12);
       }
     }
   }
+}
+
+int swap()
+{
+  if (stored == 4)
+  {
+    stored = piece.shape;
+    // go to next piece in array
+    return 1;
+  }
+  else
+  {
+    int temp = stored;
+    stored = piece.shape;
+    piece.shape = temp;
+    // call construstor of new shape;
+    if (temp == 0)
+    {
+      Square(&piece, 1, squareImage, squareBlack);
+    }
+    else if (temp == 1)
+    {
+      Rectangle(&piece, 1, rectangleImage1, rectangleImage2, rectangleBlack1, rectangleBlack2);
+    }
+    else if (temp == 2)
+    {
+      // call j
+    }
+    else
+    {
+      // cal L
+    }
+  }
+  return 0;
 }
 
 typedef enum
@@ -256,17 +293,22 @@ int main(void)
   int count = 0;
   while (1)
   {
-    if (Switch)
+    if (Switch & 0x1)
     {
       rotate(&piece);
+    }
+    if (Switch & 0x2)
+    {
+      if (swap())
+      {
+        // call random piece function?
+        continue;
+      }
     }
     int xPos = piece.x;
     ST7735_DrawBitmap(xPos, piece.y + 40, piece.image[piece.orientation], piece.w[piece.orientation], piece.h[piece.orientation]);
     Clock_Delay1ms(500);
-    if (!blocks[xPos][piece.y / 12])
-    {
-      ST7735_DrawBitmap(xPos, piece.y + 40, piece.black[piece.orientation], piece.w[piece.orientation], piece.h[piece.orientation]);
-    }
+    ST7735_DrawBitmap(xPos, piece.y + 40, piece.black[piece.orientation], piece.w[piece.orientation], piece.h[piece.orientation]);
     if (piece.y / 12 == 9)
     {
       placeBlock(piece);
@@ -283,7 +325,7 @@ int main(void)
       { // if full row then shift everyting down
         Clock_Delay1ms(50);
         drawShape(piece);
-      }
+      } // replace with random piece function / array?
       if (count % 2)
         Square(&piece, 1, squareImage, squareBlack);
       else
