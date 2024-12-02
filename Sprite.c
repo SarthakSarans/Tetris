@@ -53,18 +53,94 @@ void Rectangle(sprite_t *sprite, uint32_t speed, const unsigned short *rectangle
     sprite->orientation = 0;
     sprite->needDraw = 1;
 }
+void LPiece(sprite_t *sprite, uint32_t speed, const unsigned short *LPiece1, const unsigned short *LPiece2, const unsigned short *LPiece3, const unsigned short *LPiece4, const unsigned short *LPieceBlack1, const unsigned short *LPieceBlack2, const unsigned short *LPieceBlack3, const unsigned short *LPieceBlack4) {
+    sprite->shape = lshape;
+
+    //setting starting position (set some random x value, y = 0 to start from top)
+    sprite->x = 56;
+    sprite->y = 0;
+
+    //velocity = 0 to put block in original orientation
+    sprite->vx = 0;
+    sprite->vy = speed;
+    for (int i = 0; i < 4; i++) {
+        if ((i % 4) == 0) {
+            sprite->image[i] = LPiece1;
+            sprite->black[i] = LPieceBlack1;
+            sprite->w[i] = 24;
+            sprite->h[i] = 36;
+        } else if ((i % 4) == 1) {
+            sprite->image[i] = LPiece2;
+            sprite->black[i] = LPieceBlack2;
+            sprite->w[i] = 36;
+            sprite->h[i] = 24;
+        } else if ((i % 4) == 2) {
+            sprite->image[i] = LPiece3;
+            sprite->black[i] = LPieceBlack3;
+            sprite->w[i] = 24;
+            sprite->h[i] = 36;
+        } else {
+            sprite->image[i] = LPiece4;
+            sprite->black[i] = LPieceBlack4;
+            sprite->w[i] = 36;
+            sprite->h[i] = 24;
+        }
+    }
+    sprite->life = alive;
+    sprite->orientation = 0;
+    sprite->needDraw = 1;
+}
+
+void JPiece(sprite_t *sprite, uint32_t speed, const unsigned short *JPiece1, const unsigned short *JPiece2, const unsigned short *JPiece3, const unsigned short *JPiece4, const unsigned short *JPieceBlack1, const unsigned short *JPieceBlack2, const unsigned short *JPieceBlack3, const unsigned short *JPieceBlack4) {
+    sprite->shape = jshape;
+
+    //setting starting position (set some random x value, y = 0 to start from top)
+    sprite->x = 56;
+    sprite->y = 0;
+
+    //velocity = 0 to put block in original orientation
+    sprite->vx = 0;
+    sprite->vy = speed;
+
+    for (int i = 0; i < 4; i++) {
+        if ((i % 4) == 0) {
+            sprite->image[i] = JPiece1;
+            sprite->black[i] = JPieceBlack1;
+            sprite->w[i] = 24;
+            sprite->h[i] = 36;
+        } else if ((i % 4) == 1) {
+            sprite->image[i] = JPiece2;
+            sprite->black[i] = JPieceBlack2;
+            sprite->w[i] = 36;
+            sprite->h[i] = 24;
+        } else if ((i % 4) == 2) {
+            sprite->image[i] = JPiece3;
+            sprite->black[i] = JPieceBlack3;
+            sprite->w[i] = 24;
+            sprite->h[i] = 36;
+        } else {
+            sprite->image[i] = JPiece4;
+            sprite->black[i] = JPieceBlack4;
+            sprite->w[i] = 36;
+            sprite->h[i] = 24;
+        }
+    }
+
+    sprite->life = alive;
+    sprite->orientation = 0;
+    sprite->needDraw = 1;
+}
 
 void placeBlock(sprite_t sprite)
 {
     if (sprite.shape == sq)
     {
-        if(clearBlocks(sprite.y / 12)){return;}
         blocks[sprite.x / 12][sprite.y / 12] = 1;
         blocks[sprite.x / 12 + 1][sprite.y / 12] = 1;
         blocks[sprite.x / 12][sprite.y / 12 - 1] = 1;
         blocks[sprite.x / 12 + 1][sprite.y / 12 - 1] = 1;
-        
     }
+
     if (sprite.shape == rect)
     {
         if ((sprite.orientation % 2))
@@ -76,12 +152,58 @@ void placeBlock(sprite_t sprite)
         }
         else
         {
-            if(clearBlocks(sprite.y / 12)){return;}
             blocks[sprite.x / 12][sprite.y / 12] = 1;
             blocks[sprite.x / 12][sprite.y / 12 - 1] = 1;
             blocks[sprite.x / 12][sprite.y / 12 - 2] = 1;
             blocks[sprite.x / 12][sprite.y / 12 - 3] = 1;
-           
+        }
+    }
+
+    if (sprite.shape == lshape) {
+        if ((sprite.orientation % 4) == 0) {
+            blocks[sprite.x / 12][sprite.y / 12] = 1;
+            blocks[sprite.x / 12 + 1][sprite.y / 12] = 1;
+            blocks[sprite.x / 12][sprite.y / 12 - 1];
+            blocks[sprite.x / 12][sprite.y / 12 - 2];
+        } else if ((sprite.orientation % 4) == 1) {
+            blocks[sprite.x / 12][sprite.y / 12] = 1;
+            blocks[sprite.x / 12][sprite.y / 12 - 1] = 1;
+            blocks[sprite.x / 12 + 1][sprite.y / 12 - 1] = 1;
+            blocks[sprite.x / 12 + 2][sprite.y / 12 - 1] = 1;
+        } else if ((sprite.orientation % 4) == 2) {
+            blocks[sprite.x / 12][sprite.y / 12 - 2] = 1;
+            blocks[sprite.x / 12 + 1][sprite.y / 12 - 2] = 1;
+            blocks[sprite.x / 12 + 1][sprite.y / 12 - 1] = 1;
+            blocks[sprite.x / 12 + 1][sprite.y / 12] = 1;
+        } else {
+            blocks[sprite.x / 12][sprite.y / 12] = 1;
+            blocks[sprite.x / 12][sprite.y / 12 - 1] = 1;
+            blocks[sprite.x / 12 + 1][sprite.y / 12] = 1;
+            blocks[sprite.x / 12 + 2][sprite.y / 12] = 1;
+        }
+    }
+
+    if (sprite.shape == jshape) {
+        if ((sprite.orientation % 4) == 0) {
+            blocks[sprite.x / 12][sprite.y / 12] = 1;
+            blocks[sprite.x / 12 + 1][sprite.y / 12] = 1;
+            blocks[sprite.x / 12 + 1][sprite.y / 12 - 1];
+            blocks[sprite.x / 12 + 1][sprite.y / 12 - 2];
+        } else if ((sprite.orientation % 4) == 1) {
+            blocks[sprite.x / 12][sprite.y / 12] = 1;
+            blocks[sprite.x / 12][sprite.y / 12 - 1] = 1;
+            blocks[sprite.x / 12 + 1][sprite.y / 12] = 1;
+            blocks[sprite.x / 12 + 2][sprite.y / 12] = 1;
+        } else if ((sprite.orientation % 4) == 2) {
+            blocks[sprite.x / 12][sprite.y / 12] = 1;
+            blocks[sprite.x / 12][sprite.y / 12 - 1] = 1;
+            blocks[sprite.x / 12][sprite.y / 12 - 2] = 1;
+            blocks[sprite.x / 12 + 1][sprite.y / 12 - 2] = 1;
+        } else {
+            blocks[sprite.x / 12][sprite.y / 12] = 1;
+            blocks[sprite.x / 12 + 1][sprite.y / 12] = 1;
+            blocks[sprite.x / 12 + 2][sprite.y / 12] = 1;
+            blocks[sprite.x / 12 + 2][sprite.y / 12 + 1] = 1;
         }
     }
 }
@@ -167,6 +289,7 @@ int validX(sprite_t sprite, int x)
 int processGrid()
 {
     int changed = 0;
+    int total = 0;
     for (int row = 0; row < 10; row++)
     {
         int isFull = 1; // Assume the row is full
@@ -181,6 +304,7 @@ int processGrid()
         if (isFull)
         {
             changed = 1;
+            total += 1;
             // Shift rows above the full row down
             for (int r = row; r > 0; r--)
             {
@@ -199,6 +323,7 @@ int processGrid()
             row--;
         }
     }
+    score = 100*changed/2;
     return changed;
 }
 

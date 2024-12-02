@@ -63,6 +63,7 @@ uint32_t Random(uint32_t n)
   return (Random32() >> 16) % n;
 }
 int swap();
+int BlockMove(int posi);
 // games  engine runs at 30Hz
 sprite_t piece;
 uint32_t Data, Position, Flag, Switch; // Global Variables
@@ -291,6 +292,24 @@ int main(void)
   ST7735_FillScreen(ST7735_BLACK);
   Rectangle(&piece, 1, rectangleImage1, rectangleImage2, rectangleBlack1, rectangleBlack2);
   int count = 0;
+  ST7735_SetCursor(0, 0);
+  printf("Nothing  ");
+  int language = 0;
+  int score = 0;
+  ST7735_DrawBitmap(0, 160, startPage, 128, 160);
+  while (!Switch)
+  {
+    if (Switch & 0x1)
+    {
+      language = 1;
+    }
+    else if (Switch)
+    {
+      break;
+    }
+  }
+
+  ST7735_FillScreen(ST7735_BLACK);
   while (1)
   {
     if (Switch & 0x1)
@@ -299,6 +318,23 @@ int main(void)
     }
     if (Switch & 0x2)
     {
+      ST7735_SetCursor(0, 0);
+      if (piece.shape == 0)
+      {
+        printf("Square   ");
+      }
+      if (piece.shape == 1)
+      {
+        printf("Rectangle");
+      }
+      if (piece.shape == 2)
+      {
+        printf("J        ");
+      }
+      if (piece.shape == 3)
+      {
+        printf("L        ");
+      }
       if (swap())
       {
         // call random piece function?
@@ -311,6 +347,10 @@ int main(void)
     ST7735_DrawBitmap(xPos, piece.y + 40, piece.black[piece.orientation], piece.w[piece.orientation], piece.h[piece.orientation]);
     if (piece.y / 12 == 9)
     {
+      if (clearBlocks(piece.y / 12))
+      {
+        break;
+      }
       placeBlock(piece);
     }
     int dropped = drop(&piece);
@@ -318,6 +358,10 @@ int main(void)
     {
       if (dropped == 2)
       {
+        if (clearBlocks(piece.y / 12))
+        {
+          break;
+        }
         placeBlock(piece);
       }
       drawShape(piece);
@@ -333,6 +377,14 @@ int main(void)
       count++;
     }
     // write code to test switches and LEDs
+  }
+  ST7735_FillScreen(ST7735_BLACK);
+  ST7735_SetCursor(0, 0);
+  printf("Game Over! \n");
+  printf("Score:%d \n", score);
+  printf("Hit the left button to place again!\n");
+  while (1)
+  {
   }
 }
 
