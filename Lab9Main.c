@@ -119,6 +119,20 @@ void drawShape(sprite_t sprite)
   }
 }
 
+void drawShapeAlive(sprite_t sprite)
+{
+  for (int i = 0; i < 10; i++)
+  {
+    for (int j = 0; j < 10; j++)
+    {
+      if (blocks[i][j])
+      {
+        ST7735_DrawBitmap(i * 12 + 4, j * 12 + 52, singleBlock, 12, 12);
+      }
+    }
+  }
+}
+
 int swap()
 {
   if (stored == 4)
@@ -408,8 +422,13 @@ int main(void)
     }
     int xPos = piece.x;
     ST7735_DrawBitmap(xPos, piece.y + 40, piece.image[piece.orientation], piece.w[piece.orientation], piece.h[piece.orientation]);
+    if ((piece.shape == 2 || piece.shape == 3) && piece.orientation == 2)
+    {
+      drawShapeAlive(piece);
+    }
     Clock_Delay1ms(500);
     ST7735_DrawBitmap(xPos, piece.y + 40, piece.black[piece.orientation], piece.w[piece.orientation], piece.h[piece.orientation]);
+
     if (piece.y / 12 == 9)
     {
       if (clearBlocks(piece.y / 12))
