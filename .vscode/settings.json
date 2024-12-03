@@ -1,6 +1,7 @@
 {
   "files.associations": {
     "sprite.h": "c",
-    "switch.h": "c"
+    "switch.h": "c",
+    "texas.h": "c"
   }
 }

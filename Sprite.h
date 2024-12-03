@@ -42,6 +42,6 @@ extern int score;
 extern void placeBlock(sprite_t sprite);
 extern void Square(sprite_t *sprite, uint32_t speed, const unsigned short *squareImage, const unsigned short *squareBlack);
 extern void Rectangle(sprite_t *sprite, uint32_t speed, const unsigned short *rectangleImage1, const unsigned short *rectangleImage2, const unsigned short *rectangleBlack1, const unsigned short *rectangleBlack2);
-extern void LPiece(sprite_t *sprite, uint32_t speed, const unsigned short *LPiece1, const unsigned short *LPiece2, const unsigned short *LPiece3, const unsigned short *LPiece4, const unsigned short *LPieceBlack1, const unsigned short *LPieceBlack2, const unsigned short *LPieceBlack3, const unsigned short *LPieceBlack4);
-extern void JPiece(sprite_t *sprite, uint32_t speed, const unsigned short *JPiece1, const unsigned short *JPiece2, const unsigned short *JPiece3, const unsigned short *JPiece4, const unsigned short *JPieceBlack1, const unsigned short *JPieceBlack2, const unsigned short *JPieceBlack3, const unsigned short *JPieceBlack4);
+extern void LPiece(sprite_t *sprite, uint32_t speed, const unsigned short *LPiece1, const unsigned short *LPiece2, const unsigned short *LPiece3, const unsigned short *LPiece4, const unsigned short *LPieceBlack1, const unsigned short *LPieceBlack2);
+extern void JPiece(sprite_t *sprite, uint32_t speed, const unsigned short *JPiece1, const unsigned short *JPiece2, const unsigned short *JPiece3, const unsigned short *JPiece4, const unsigned short *JPieceBlack1, const unsigned short *JPieceBlack2);
 #endif

@@ -32,6 +32,7 @@ void PLL_Init(void)
   Clock_Init80MHz(0); // run this line for 80MHz
 }
 int blocks[10][10] = {0};
+int score = 0;
 Arabic_t ArabicAlphabet[] = {
     alif, ayh, baa, daad, daal, dhaa, dhaal, faa, ghayh, haa, ha, jeem, kaaf, khaa, laam, meem, noon, qaaf, raa, saad, seen, sheen, ta, thaa, twe, waaw, yaa, zaa, space, dot, null};
 Arabic_t Hello[] = {alif, baa, ha, raa, meem, null};                                   // hello
@@ -295,7 +296,7 @@ int main(void)
   ST7735_SetCursor(0, 0);
   printf("Nothing  ");
   int language = 0;
-  int score = 0;
+
   ST7735_DrawBitmap(0, 160, startPage, 128, 160);
   while (!Switch)
   {
@@ -370,11 +371,24 @@ int main(void)
         Clock_Delay1ms(50);
         drawShape(piece);
       } // replace with random piece function / array?
-      if (count % 2)
+      int rand = 2;
+
+      if (rand == 0)
+      {
         Square(&piece, 1, squareImage, squareBlack);
-      else
+      }
+      else if (rand == 1)
+      {
         Rectangle(&piece, 1, rectangleImage1, rectangleImage2, rectangleBlack1, rectangleBlack2);
-      count++;
+      }
+      else if (rand == 2)
+      {
+        LPiece(&piece, 1, LPiece1, LPiece2, LPiece3, LPiece4, LJBlack1, LJBlack2);
+      }
+      else
+      {
+        JPiece(&piece, 1, JPiece1, JPiece2, JPiece3, JPiece4, LJBlack1, LJBlack2);
+      }
     }
     // write code to test switches and LEDs
   }
