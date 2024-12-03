@@ -141,14 +141,37 @@ int swap()
     }
     else if (temp == 2)
     {
-      // call j
+      LPiece(&piece, 1, LPiece1, LPiece2, LPiece3, LPiece4, LJBlack1, LJBlack2);
     }
     else
     {
-      // cal L
+      JPiece(&piece, 1, JPiece1, JPiece2, JPiece3, JPiece4, LJBlack1, LJBlack2);
     }
   }
   return 0;
+}
+
+void RandomPiece()
+{
+  int rand = Random(4);
+  // int rand = 3;
+
+  if (rand == 0)
+  {
+    Square(&piece, 1, squareImage, squareBlack);
+  }
+  else if (rand == 1)
+  {
+    Rectangle(&piece, 1, rectangleImage1, rectangleImage2, rectangleBlack1, rectangleBlack2);
+  }
+  else if (rand == 2)
+  {
+    LPiece(&piece, 1, LPiece1, LPiece2, LPiece3, LPiece4, LJBlack1, LJBlack2);
+  }
+  else
+  {
+    JPiece(&piece, 1, JPiece1, JPiece2, JPiece3, JPiece4, LJBlack1, LJBlack2);
+  }
 }
 
 typedef enum
@@ -294,32 +317,46 @@ int main(void)
   Rectangle(&piece, 1, rectangleImage1, rectangleImage2, rectangleBlack1, rectangleBlack2);
   int count = 0;
   ST7735_SetCursor(0, 0);
-  printf("Nothing  ");
+
   int language = 0;
 
   ST7735_DrawBitmap(0, 160, startPage, 128, 160);
-  while (!Switch)
+  printf("Rect\xE1ngulo");
+  while (1)
   {
-    if (Switch & 0x1)
+    if (Switch_In() & 0x1)
     {
       language = 1;
     }
-    else if (Switch)
+    else if (Switch_In())
     {
       break;
     }
   }
 
   ST7735_FillScreen(ST7735_BLACK);
-  while (1)
+  ST7735_SetCursor(0, 0);
+
+  if (!language)
   {
-    if (Switch & 0x1)
+    printf("Nothing  ");
+  }
+  else
+  {
+    printf("Nada     ");
+  }
+
+while (1)
+{
+  if (Switch & 0x1)
+  {
+    rotate(&piece);
+  }
+  if (Switch & 0x2)
+  {
+    ST7735_SetCursor(0, 0);
+    if (!language)
     {
-      rotate(&piece);
-    }
-    if (Switch & 0x2)
-    {
-      ST7735_SetCursor(0, 0);
       if (piece.shape == 0)
       {
         printf("Square   ");
@@ -336,70 +373,81 @@ int main(void)
       {
         printf("L        ");
       }
-      if (swap())
+    }
+    else
+    {
+      if (piece.shape == 0)
       {
-        // call random piece function?
-        continue;
+        printf("Cuadrado  ");
+      }
+      if (piece.shape == 1)
+      {
+        printf("Rect\xE1ngulo");
+      }
+      if (piece.shape == 2)
+      {
+        printf("J         ");
+      }
+      if (piece.shape == 3)
+      {
+        printf("L         ");
       }
     }
-    int xPos = piece.x;
-    ST7735_DrawBitmap(xPos, piece.y + 40, piece.image[piece.orientation], piece.w[piece.orientation], piece.h[piece.orientation]);
-    Clock_Delay1ms(500);
-    ST7735_DrawBitmap(xPos, piece.y + 40, piece.black[piece.orientation], piece.w[piece.orientation], piece.h[piece.orientation]);
-    if (piece.y / 12 == 9)
+    if (swap())
+    {
+      // call random piece function?
+      RandomPiece();
+      continue;
+    }
+  }
+  int xPos = piece.x;
+  ST7735_DrawBitmap(xPos, piece.y + 40, piece.image[piece.orientation], piece.w[piece.orientation], piece.h[piece.orientation]);
+  Clock_Delay1ms(500);
+  ST7735_DrawBitmap(xPos, piece.y + 40, piece.black[piece.orientation], piece.w[piece.orientation], piece.h[piece.orientation]);
+  if (piece.y / 12 == 9)
+  {
+    if (clearBlocks(piece.y / 12))
+    {
+      break;
+    }
+    placeBlock(piece);
+  }
+  int dropped = drop(&piece);
+  if (dropped) // check if being placed down
+  {
+    if (dropped == 2)
     {
       if (clearBlocks(piece.y / 12))
       {
         break;
       }
-      placeBlock(piece);
-    }
-    int dropped = drop(&piece);
-    if (dropped) // check if being placed down
-    {
-      if (dropped == 2)
+      if (placeBlock(piece))
       {
-        if (clearBlocks(piece.y / 12))
-        {
-          break;
-        }
-        placeBlock(piece);
+        break;
       }
+    }
+    drawShape(piece);
+    if (processGrid())
+    { // if full row then shift everyting down
+      Clock_Delay1ms(50);
       drawShape(piece);
-      if (processGrid())
-      { // if full row then shift everyting down
-        Clock_Delay1ms(50);
-        drawShape(piece);
-      } // replace with random piece function / array?
-      int rand = 2;
-
-      if (rand == 0)
-      {
-        Square(&piece, 1, squareImage, squareBlack);
-      }
-      else if (rand == 1)
-      {
-        Rectangle(&piece, 1, rectangleImage1, rectangleImage2, rectangleBlack1, rectangleBlack2);
-      }
-      else if (rand == 2)
-      {
-        LPiece(&piece, 1, LPiece1, LPiece2, LPiece3, LPiece4, LJBlack1, LJBlack2);
-      }
-      else
-      {
-        JPiece(&piece, 1, JPiece1, JPiece2, JPiece3, JPiece4, LJBlack1, LJBlack2);
-      }
-    }
-    // write code to test switches and LEDs
+    } // replace with random piece function / array?
+    RandomPiece();
   }
-  ST7735_FillScreen(ST7735_BLACK);
-  ST7735_SetCursor(0, 0);
-  printf("Game Over! \n");
-  printf("Score:%d \n", score);
-  printf("Hit the left button to place again!\n");
-  while (1)
-  {
-  }
+  // write code to test switches and LEDs
+}
+ST7735_FillScreen(ST7735_BLACK);
+ST7735_SetCursor(0, 0);
+if(!language){
+printf("Game Over! \n");
+printf("Score:%d \n", score);
+}else{
+  printf("\xADJuego terminado! \n");
+printf("Puntaje:%d \n", score);
+}
+while (1)
+{
+}
 }
 
 // use main4 to test sound outputs

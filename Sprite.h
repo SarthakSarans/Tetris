@@ -39,7 +39,7 @@ extern int validX(sprite_t sprite, int x);
 extern int processGrid();
 extern int clearBlocks(int xPos);
 extern int score;
-extern void placeBlock(sprite_t sprite);
+extern int placeBlock(sprite_t sprite);
 extern void Square(sprite_t *sprite, uint32_t speed, const unsigned short *squareImage, const unsigned short *squareBlack);
 extern void Rectangle(sprite_t *sprite, uint32_t speed, const unsigned short *rectangleImage1, const unsigned short *rectangleImage2, const unsigned short *rectangleBlack1, const unsigned short *rectangleBlack2);
 extern void LPiece(sprite_t *sprite, uint32_t speed, const unsigned short *LPiece1, const unsigned short *LPiece2, const unsigned short *LPiece3, const unsigned short *LPiece4, const unsigned short *LPieceBlack1, const unsigned short *LPieceBlack2);

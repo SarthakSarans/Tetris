@@ -150,10 +150,14 @@ void JPiece(sprite_t *sprite, uint32_t speed, const unsigned short *JPiece1, con
     sprite->needDraw = 1;
 }
 
-void placeBlock(sprite_t sprite)
+int placeBlock(sprite_t sprite)
 {
     if (sprite.shape == sq)
     {
+        if (sprite.y / 12 - 2 < 0)
+        {
+            return 1;
+        }
         blocks[sprite.x / 12][sprite.y / 12] = 1;
         blocks[sprite.x / 12 + 1][sprite.y / 12] = 1;
         blocks[sprite.x / 12][sprite.y / 12 - 1] = 1;
@@ -172,6 +176,10 @@ void placeBlock(sprite_t sprite)
         else
         {
             blocks[sprite.x / 12][sprite.y / 12] = 1;
+            if (sprite.y / 12 - 4 < 0)
+            {
+                return 1;
+            }
             blocks[sprite.x / 12][sprite.y / 12 - 1] = 1;
             blocks[sprite.x / 12][sprite.y / 12 - 2] = 1;
             blocks[sprite.x / 12][sprite.y / 12 - 3] = 1;
@@ -182,6 +190,10 @@ void placeBlock(sprite_t sprite)
     {
         if ((sprite.orientation % 4) == 0)
         {
+            if (sprite.y / 12 - 3 < 0)
+            {
+                return 1;
+            }
             blocks[sprite.x / 12][sprite.y / 12] = 1;
             blocks[sprite.x / 12 + 1][sprite.y / 12] = 1;
             blocks[sprite.x / 12][sprite.y / 12 - 1] = 1;
@@ -189,6 +201,10 @@ void placeBlock(sprite_t sprite)
         }
         else if ((sprite.orientation % 4) == 1)
         {
+            if (sprite.y / 12 - 2 < 0)
+            {
+                return 1;
+            }
             blocks[sprite.x / 12][sprite.y / 12] = 1;
             blocks[sprite.x / 12][sprite.y / 12 - 1] = 1;
             blocks[sprite.x / 12 + 1][sprite.y / 12 - 1] = 1;
@@ -196,6 +212,10 @@ void placeBlock(sprite_t sprite)
         }
         else if ((sprite.orientation % 4) == 2)
         {
+            if (sprite.y / 12 - 3 < 0)
+            {
+                return 1;
+            }
             blocks[sprite.x / 12][sprite.y / 12 - 2] = 1;
             blocks[sprite.x / 12 + 1][sprite.y / 12 - 2] = 1;
             blocks[sprite.x / 12 + 1][sprite.y / 12 - 1] = 1;
@@ -203,10 +223,14 @@ void placeBlock(sprite_t sprite)
         }
         else
         {
+            if (sprite.y / 12 - 2 < 0)
+            {
+                return 1;
+            }
             blocks[sprite.x / 12][sprite.y / 12] = 1;
-            blocks[sprite.x / 12][sprite.y / 12 - 1] = 1;
-            blocks[sprite.x / 12 + 1][sprite.y / 12] = 1;
+            blocks[sprite.x / 12+1][sprite.y / 12 ] = 1;
             blocks[sprite.x / 12 + 2][sprite.y / 12] = 1;
+            blocks[sprite.x / 12 + 2][sprite.y / 12 -1] = 1;
         }
     }
 
@@ -214,6 +238,10 @@ void placeBlock(sprite_t sprite)
     {
         if ((sprite.orientation % 4) == 0)
         {
+            if (sprite.y / 12 - 3 < 0)
+            {
+                return 1;
+            }
             blocks[sprite.x / 12][sprite.y / 12] = 1;
             blocks[sprite.x / 12 + 1][sprite.y / 12] = 1;
             blocks[sprite.x / 12 + 1][sprite.y / 12 - 1] = 1;
@@ -221,6 +249,10 @@ void placeBlock(sprite_t sprite)
         }
         else if ((sprite.orientation % 4) == 1)
         {
+            if (sprite.y / 12 - 2 < 0)
+            {
+                return 1;
+            }
             blocks[sprite.x / 12][sprite.y / 12] = 1;
             blocks[sprite.x / 12][sprite.y / 12 - 1] = 1;
             blocks[sprite.x / 12 + 1][sprite.y / 12] = 1;
@@ -228,6 +260,10 @@ void placeBlock(sprite_t sprite)
         }
         else if ((sprite.orientation % 4) == 2)
         {
+            if (sprite.y / 12 - 3 < 0)
+            {
+                return 1;
+            }
             blocks[sprite.x / 12][sprite.y / 12] = 1;
             blocks[sprite.x / 12][sprite.y / 12 - 1] = 1;
             blocks[sprite.x / 12][sprite.y / 12 - 2] = 1;
@@ -235,12 +271,17 @@ void placeBlock(sprite_t sprite)
         }
         else
         {
-            blocks[sprite.x / 12][sprite.y / 12] = 1;
-            blocks[sprite.x / 12 + 1][sprite.y / 12] = 1;
+            if (sprite.y / 12 - 2 < 0)
+            {
+                return 1;
+            }
+            blocks[sprite.x / 12][sprite.y / 12-1] = 1;
+            blocks[sprite.x / 12 + 1][sprite.y / 12-1] = 1;
             blocks[sprite.x / 12 + 2][sprite.y / 12] = 1;
-            blocks[sprite.x / 12 + 2][sprite.y / 12 + 1] = 1;
+            blocks[sprite.x / 12 + 2][sprite.y / 12 - 1] = 1;
         }
     }
+    return 0;
 }
 int clearBlocks(int yPos)
 {
@@ -263,7 +304,7 @@ void rotate(sprite_t *sprite)
     sprite->orientation = (sprite->orientation + 1) % 4;
 }
 int drop(sprite_t *sprite)
-{
+{ // 1 for not valid, 0 for valid, 2 for placed down
     int dropping = (sprite->y + 12) % 120;
 
     // Square piece (already implemented)
@@ -310,14 +351,14 @@ int drop(sprite_t *sprite)
             break;
         case 1:
             if (blocks[sprite->x / 12][dropping / 12] ||
-                blocks[sprite->x / 12 + 1][dropping / 12] ||
-                blocks[sprite->x / 12 + 2][dropping / 12])
+                blocks[sprite->x / 12 + 1][dropping / 12 - 1] ||
+                blocks[sprite->x / 12 + 2][dropping / 12 - 1])
             {
                 return 2;
             }
             break;
         case 2:
-            if (blocks[sprite->x / 12][dropping / 12] ||
+            if (blocks[sprite->x / 12][dropping / 12 - 2] ||
                 blocks[sprite->x / 12 + 1][dropping / 12])
             {
                 return 2;
@@ -355,14 +396,14 @@ int drop(sprite_t *sprite)
             break;
         case 2:
             if (blocks[sprite->x / 12][dropping / 12] ||
-                blocks[sprite->x / 12 + 1][dropping / 12])
+                blocks[sprite->x / 12 + 1][dropping / 12 - 2])
             {
                 return 2;
             }
             break;
         case 3:
-            if (blocks[sprite->x / 12][dropping / 12] ||
-                blocks[sprite->x / 12 + 1][dropping / 12] ||
+            if (blocks[sprite->x / 12][dropping / 12 - 1] ||
+                blocks[sprite->x / 12 + 1][dropping / 12 - 1] ||
                 blocks[sprite->x / 12 + 2][dropping / 12])
             {
                 return 2;
@@ -475,6 +516,6 @@ int processGrid()
             row--;
         }
     }
-    score = 100 * changed / 2;
+    score += 200 * changed / 2;
     return changed;
 }
