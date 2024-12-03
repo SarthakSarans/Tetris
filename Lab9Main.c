@@ -90,8 +90,7 @@ uint8_t TExaS_LaunchPadLogicPB27PB26(void)
   return (0x80 | ((GPIOB->DOUT31_0 >> 26) & 0x03));
 }
 
-
-uint32_t M = SysTick->VAL;
+uint32_t M = 1;
 uint32_t Random32(void)
 {
   M = 1664525 * M + 1013904223;
@@ -312,7 +311,7 @@ int main(void)
   LaunchPad_Init();
   ST7735_InitPrintf();
   Switch_Init(); // initialize switches
-  Sound_Init(); // initialize sound
+  Sound_Init();  // initialize sound
   LED_Init();    // initialize LED
   ADCinit();
   TimerG12_IntArm(2666664, 0);
@@ -330,8 +329,9 @@ int main(void)
     if (Switch_In() & 0x1)
     {
       language = 1;
+      break;
     }
-    else if (Switch_In())
+    else if (Switch_In() & 0x2)
     {
       break;
     }
@@ -359,7 +359,7 @@ int main(void)
     }
     if (Switch & 0x2)
     {
-        Sound_Killed();
+      Sound_Killed();
       ST7735_SetCursor(0, 0);
       if (!language)
       {
