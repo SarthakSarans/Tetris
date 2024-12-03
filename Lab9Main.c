@@ -321,7 +321,6 @@ int main(void)
   int language = 0;
 
   ST7735_DrawBitmap(0, 160, startPage, 128, 160);
-  printf("Rect\xE1ngulo");
   while (1)
   {
     if (Switch_In() & 0x1)
