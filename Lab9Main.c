@@ -90,7 +90,7 @@ uint8_t TExaS_LaunchPadLogicPB27PB26(void)
   return (0x80 | ((GPIOB->DOUT31_0 >> 26) & 0x03));
 }
 
-uint32_t M = 1;
+uint32_t M = 121;
 uint32_t Random32(void)
 {
   M = 1664525 * M + 1013904223;
@@ -170,6 +170,7 @@ int swap()
 
 void RandomPiece()
 {
+  M = SysTick->VAL;
   int rand = Random(4);
   // int rand = 3;
 
@@ -332,7 +333,6 @@ int main(void)
   TIMG12_IRQHandler();
   __enable_irq();
   ST7735_FillScreen(ST7735_BLACK);
-
   ST7735_SetCursor(0, 0);
 
   int language = 0;
@@ -353,7 +353,7 @@ int main(void)
 
   ST7735_FillScreen(ST7735_BLACK);
   ST7735_SetCursor(0, 0);
-
+  Clock_Delay1ms(500);
   if (!language)
   {
     printf("Nothing  ");
@@ -417,6 +417,7 @@ int main(void)
       {
         // call random piece function?
         RandomPiece();
+        Clock_Delay1ms(600);
         continue;
       }
     }
